@@ -204,14 +204,41 @@ class OrderController extends Controller
                     'type' => 0,
                     'data' => $this->stripeWepay($order)
                 ]);
-            case 4:
+            /*case 4:
                 // bitpayX
                 if (!(int)config('v2board.bitpayx_enable')) {
                     abort(500, __('user.order.checkout.pay_method_not_use'));
                 }
                 return response([
-                    'type' => 1,
+                    'type' => 0,
                     'data' => $this->bitpayX($order)
+                ]);*/
+            case 11:
+                // bitpayX_alipay
+                if (!(int)config('v2board.bitpayx_enable')) {
+                    abort(500, __('user.order.checkout.pay_method_not_use'));
+                }
+                return response([
+                    'type' => 0,
+                    'data' => $this->bitpayX_alipay($order)
+                ]);
+            case 12:
+                // bitpayX_wechat
+                if (!(int)config('v2board.bitpayx_enable')) {
+                    abort(500, __('user.order.checkout.pay_method_not_use'));
+                }
+                return response([
+                    'type' => 0,
+                    'data' => $this->bitpayX_wechat($order)
+                ]);
+            case 13:
+                // bitpayX_other
+                if (!(int)config('v2board.bitpayx_enable')) {
+                    abort(500, __('user.order.checkout.pay_method_not_use'));
+                }
+                return response([
+                    'type' => 1,
+                    'data' => $this->bitpayX_other($order)
                 ]);
             case 5:
                 if (!(int)config('v2board.mgate_enable')) {
@@ -283,12 +310,36 @@ class OrderController extends Controller
             array_push($data, $stripeWepay);
         }
 
-        if ((int)config('v2board.bitpayx_enable')) {
+        /*if ((int)config('v2board.bitpayx_enable')) {
             $bitpayX = new \StdClass();
             $bitpayX->name = config('v2board.bitpayx_name', '在线支付');
             $bitpayX->method = 4;
             $bitpayX->icon = 'wallet';
             array_push($data, $bitpayX);
+        }*/
+
+        if ((int)config('v2board.bitpayx_enable')) {
+            $bitpayX_alipay = new \StdClass();
+            $bitpayX_alipay->name = '支付宝支付';
+            $bitpayX_alipay->method = 11;
+            $bitpayX_alipay->icon = 'alipay';
+            array_push($data, $bitpayX_alipay);
+        }
+
+        if ((int)config('v2board.bitpayx_enable')) {
+            $bitpayX_wechat = new \StdClass();
+            $bitpayX_wechat->name = '微信支付';
+            $bitpayX_wechat->method = 12;
+            $bitpayX_wechat->icon = 'wechat';
+            array_push($data, $bitpayX_wechat);
+        }
+
+        if ((int)config('v2board.bitpayx_enable')) {
+            $bitpayX_other = new \StdClass();
+            $bitpayX_other->name = '数字货币';
+            $bitpayX_other->method = 13;
+            $bitpayX_other->icon = 'wallet';
+            array_push($data, $bitpayX_other);
         }
 
         if ((int)config('v2board.mgate_enable')) {
@@ -451,13 +502,83 @@ class OrderController extends Controller
         return $charge->paid;
     }
 
-    private function bitpayX($order)
+    /*private function bitpayX($order)
     {
         $bitpayX = new BitpayX(config('v2board.bitpayx_appsecret'));
         $params = [
             'merchant_order_id' => $order->trade_no,
             'price_amount' => $order->total_amount / 100,
             'price_currency' => 'CNY',
+            'title' => '支付单号：' . $order->trade_no,
+            'description' => '充值：' . $order->total_amount / 100 . ' 元',
+            'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
+            'success_url' => config('v2board.app_url', env('APP_URL')) . '/#/order',
+            'cancel_url' => config('v2board.app_url', env('APP_URL')) . '/#/order'
+        ];
+        $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
+        $params['token'] = $bitpayX->sign($strToSign);
+        $result = $bitpayX->mprequest($params);
+        // \Log::info('bitpayXSubmit: ' . json_encode($result));
+        if (isset($result['order']['order_id'])) {
+            return "https://qrcode.icedropper.com/invoices/?id={$result['order']['order_id']}&type=ALIPAY";
+        }
+        return false;
+    }*/
+
+    private function bitpayX_alipay($order)
+    {
+        $bitpayX = new BitpayX(config('v2board.bitpayx_appsecret'));
+        $params = [
+            'merchant_order_id' => $order->trade_no,
+            'price_amount' => $order->total_amount / 100,
+            'price_currency' => 'CNY',
+            'title' => '支付单号：' . $order->trade_no,
+            'description' => '充值：' . $order->total_amount / 100 . ' 元',
+            'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
+            'success_url' => config('v2board.app_url', env('APP_URL')) . '/#/order',
+            'cancel_url' => config('v2board.app_url', env('APP_URL')) . '/#/order'
+        ];
+        $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
+        $params['token'] = $bitpayX->sign($strToSign);
+        $result = $bitpayX->mprequest($params);
+        // \Log::info('bitpayXSubmit: ' . json_encode($result));
+        if (isset($result['order']['order_id'])) {
+            return "https://qrcode.icedropper.com/invoices/?id={$result['order']['order_id']}&type=ALIPAY";
+        }
+        return false;
+    }
+
+    private function bitpayX_wechat($order)
+    {
+        $bitpayX = new BitpayX(config('v2board.bitpayx_appsecret'));
+        $params = [
+            'merchant_order_id' => $order->trade_no,
+            'price_amount' => $order->total_amount / 100,
+            'price_currency' => 'CNY',
+            'title' => '支付单号：' . $order->trade_no,
+            'description' => '充值：' . $order->total_amount / 100 . ' 元',
+            'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
+            'success_url' => config('v2board.app_url', env('APP_URL')) . '/#/order',
+            'cancel_url' => config('v2board.app_url', env('APP_URL')) . '/#/order'
+        ];
+        $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
+        $params['token'] = $bitpayX->sign($strToSign);
+        $result = $bitpayX->mprequest($params);
+        // \Log::info('bitpayXSubmit: ' . json_encode($result));
+        if (isset($result['order']['order_id'])) {
+            return "https://qrcode.icedropper.com/invoices/?id={$result['order']['order_id']}&type=WECHAT";
+        }
+        return false;
+    }
+
+    private function bitpayX_other($order)
+    {
+        $bitpayX = new BitpayX(config('v2board.bitpayx_appsecret'));
+        $params = [
+            'merchant_order_id' => $order->trade_no,
+            'price_amount' => $order->total_amount / 100,
+            'price_currency' => 'CNY',
+            'pay_currency' => 'USDT',
             'title' => '支付单号：' . $order->trade_no,
             'description' => '充值：' . $order->total_amount / 100 . ' 元',
             'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
