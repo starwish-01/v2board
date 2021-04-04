@@ -324,18 +324,12 @@ class OrderController extends Controller
             $bitpayX_alipay->method = 11;
             $bitpayX_alipay->icon = 'alipay';
             array_push($data, $bitpayX_alipay);
-        }
-
-        if ((int)config('v2board.bitpayx_enable')) {
-            $bitpayX_wechat = new \StdClass();
+			$bitpayX_wechat = new \StdClass();
             $bitpayX_wechat->name = '微信支付';
             $bitpayX_wechat->method = 12;
             $bitpayX_wechat->icon = 'wechat';
             array_push($data, $bitpayX_wechat);
-        }
-
-        if ((int)config('v2board.bitpayx_enable')) {
-            $bitpayX_other = new \StdClass();
+			$bitpayX_other = new \StdClass();
             $bitpayX_other->name = '数字货币';
             $bitpayX_other->method = 13;
             $bitpayX_other->icon = 'wallet';
@@ -565,8 +559,8 @@ class OrderController extends Controller
         $params['token'] = $bitpayX->sign($strToSign);
         $result = $bitpayX->mprequest($params);
         // \Log::info('bitpayXSubmit: ' . json_encode($result));
-        if (isset($result['order']['order_id'])) {
-            return "https://qrcode.icedropper.com/invoices/?id={$result['order']['order_id']}&type=WECHAT";
+        if (isset($result['order']['qrcode'])) {
+            return {$result['order']['qrcode']};
         }
         return false;
     }
