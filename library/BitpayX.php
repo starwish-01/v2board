@@ -62,7 +62,6 @@ class BitpayX
         $curl = curl_init();
         $url = $this->bitpayxGatewayUri . 'orders/' . $orderid;
         curl_setopt($curl, CURLOPT_URL, $url);
-        $data_string = json_encode($data);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

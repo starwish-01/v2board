@@ -526,6 +526,7 @@ class OrderController extends Controller
             'merchant_order_id' => $order->trade_no,
             'price_amount' => $order->total_amount / 100,
             'price_currency' => 'CNY',
+            'pay_currency' => 'ALIPAY',
             'title' => '支付单号：' . $order->trade_no,
             'description' => '充值：' . $order->total_amount / 100 . ' 元',
             'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
@@ -535,11 +536,14 @@ class OrderController extends Controller
         $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
         $params['token'] = $bitpayX->sign($strToSign);
         $result = $bitpayX->mprequest($params);
-        // \Log::info('bitpayXSubmit: ' . json_encode($result));
         if (isset($result['order']['order_id'])) {
-            if ($result['data']['status'] === 400) {
-                $result = $bitpayX->mpgetorder($order->trade_no);
-                if (isset($result['invoice'])) {
+            if (!isset($result['invoice']['qrcode']) || $result['invoice']['pay_currency'] !== 'ALIPAY') {
+                $query = [
+                    'order_id' => $result['order']['order_id'],
+                    'pay_currency' => 'ALIPAY'
+                ];
+                $result = $bitpayX->mpcheckout($result['order']['order_id'], $query);
+                if (isset($result['invoice']['qrcode'])) {
                     parse_str(parse_url($result['invoice']['qrcode'])['query'], $query_arr);
                     return $query_arr['url'];
                 }
@@ -558,6 +562,7 @@ class OrderController extends Controller
             'merchant_order_id' => $order->trade_no,
             'price_amount' => $order->total_amount / 100,
             'price_currency' => 'CNY',
+            'pay_currency' => 'WECHAT',
             'title' => '支付单号：' . $order->trade_no,
             'description' => '充值：' . $order->total_amount / 100 . ' 元',
             'callback_url' => url('/api/v1/guest/order/bitpayXNotify'),
@@ -567,11 +572,14 @@ class OrderController extends Controller
         $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
         $params['token'] = $bitpayX->sign($strToSign);
         $result = $bitpayX->mprequest($params);
-        // \Log::info('bitpayXSubmit: ' . json_encode($result));
         if (isset($result['order']['order_id'])) {
-            if ($result['data']['status'] === 400) {
-                $result = $bitpayX->mpgetorder($order->trade_no);
-                if (isset($result['invoice'])) {
+            if (!isset($result['invoice']['qrcode']) || $result['invoice']['pay_currency'] !== 'WECHAT') {
+                $query = [
+                    'order_id' => $result['order']['order_id'],
+                    'pay_currency' => 'WECHAT'
+                ];
+                $result = $bitpayX->mpcheckout($result['order']['order_id'], $query);
+                if (isset($result['invoice']['qrcode'])) {
                     return $result['invoice']['qrcode'];
                 }
             } else {
@@ -598,7 +606,13 @@ class OrderController extends Controller
         $strToSign = $bitpayX->prepareSignId($params['merchant_order_id']);
         $params['token'] = $bitpayX->sign($strToSign);
         $result = $bitpayX->mprequest($params);
-        // Log::info('bitpayXSubmit: ' . json_encode($result));
+        if (!isset($result['invoice']) || $result['invoice']['pay_currency'] !== 'USDT') {
+            $query = [
+                'order_id' => $result['order']['order_id'],
+                'pay_currency' => 'USDT'
+            ];
+            $bitpayX->mpcheckout($result['order']['order_id'], $query);
+        }
         return isset($result['payment_url']) ? $result['payment_url'] : false;
     }
 
