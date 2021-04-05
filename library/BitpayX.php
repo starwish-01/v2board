@@ -56,6 +56,22 @@ class BitpayX
         return json_decode($data, true);
     }
 
+    public function mpgetorder($orderid)
+    {
+        $headers = array('token: ' . $this->bitpayxAppSecret);
+        $curl = curl_init();
+        $url = $this->bitpayxGatewayUri . 'orders/' . $orderid;
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $data_string = json_encode($data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($data, true);
+    }
+
     public function mpcheckout($orderId, $data)
     {
         $headers = array('content-type: application/json', 'token: ' . $this->bitpayxAppSecret);

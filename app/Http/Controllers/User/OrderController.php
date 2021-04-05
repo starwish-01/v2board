@@ -537,8 +537,16 @@ class OrderController extends Controller
         $result = $bitpayX->mprequest($params);
         // \Log::info('bitpayXSubmit: ' . json_encode($result));
         if (isset($result['order']['order_id'])) {
-            parse_str(parse_url($result['invoice']['qrcode'])['query'], $query_arr);
-            return $query_arr['url'];
+            if ($result['data']['status'] === 400) {
+                $result = $bitpayX->mpgetorder($order->trade_no);
+                if (isset($result['invoice']) {
+                    parse_str(parse_url($result['invoice']['qrcode'])['query'], $query_arr);
+                    return $query_arr['url'];
+                }
+            } else {
+                parse_str(parse_url($result['invoice']['qrcode'])['query'], $query_arr);
+                return $query_arr['url'];
+            }
         }
         return false;
     }
@@ -561,7 +569,14 @@ class OrderController extends Controller
         $result = $bitpayX->mprequest($params);
         // \Log::info('bitpayXSubmit: ' . json_encode($result));
         if (isset($result['order']['order_id'])) {
-            return $result['invoice']['qrcode'];
+            if ($result['data']['status'] === 400) {
+                $result = $bitpayX->mpgetorder($order->trade_no);
+                if (isset($result['invoice']) {
+                    return $result['invoice']['qrcode'];
+                }
+            } else {
+                return $result['invoice']['qrcode'];
+            }
         }
         return false;
     }
