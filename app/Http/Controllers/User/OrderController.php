@@ -539,7 +539,7 @@ class OrderController extends Controller
         if (isset($result['order']['order_id'])) {
             if ($result['data']['status'] === 400) {
                 $result = $bitpayX->mpgetorder($order->trade_no);
-                if (isset($result['invoice']) {
+                if (isset($result['invoice'])) {
                     parse_str(parse_url($result['invoice']['qrcode'])['query'], $query_arr);
                     return $query_arr['url'];
                 }
@@ -571,7 +571,7 @@ class OrderController extends Controller
         if (isset($result['order']['order_id'])) {
             if ($result['data']['status'] === 400) {
                 $result = $bitpayX->mpgetorder($order->trade_no);
-                if (isset($result['invoice']) {
+                if (isset($result['invoice'])) {
                     return $result['invoice']['qrcode'];
                 }
             } else {
