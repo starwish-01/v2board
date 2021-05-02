@@ -35,9 +35,6 @@ class ClientController extends Controller
                 if (strpos($flag, 'quantumult%20x') !== false) {
                     die($this->quantumultX($user, $servers));
                 }
-                if (strpos($flag, 'quantumult') !== false) {
-                    die($this->quantumult($user, $servers));
-                }
                 if (strpos($flag, 'clash') !== false) {
                     die($this->clash($user, $servers));
                 }
@@ -56,28 +53,6 @@ class ClientController extends Controller
             }
             die($this->origin($user, $servers));
         }
-    }
-    // TODO: Ready to stop support
-    private function quantumult($user, $servers = [])
-    {
-        $uri = '';
-        header('subscription-userinfo: upload=' . $user['u'] . '; download=' . $user['d'] . ';total=' . $user['transfer_enable']);
-        foreach ($servers as $item) {
-            if ($item['type'] === 'v2ray') {
-                $str = '';
-                $str .= $item['name'] . '= vmess, ' . $item['host'] . ', ' . $item['port'] . ', chacha20-ietf-poly1305, "' . $user['uuid'] . '", over-tls=' . ($item['tls'] ? "true" : "false") . ', certificate=0, group=' . config('v2board.app_name', 'V2Board');
-                if ($item['network'] === 'ws') {
-                    $str .= ', obfs=ws';
-                    if ($item['networkSettings']) {
-                        $wsSettings = json_decode($item['networkSettings'], true);
-                        if (isset($wsSettings['path'])) $str .= ', obfs-path="' . $wsSettings['path'] . '"';
-                        if (isset($wsSettings['headers']['Host'])) $str .= ', obfs-header="Host:' . $wsSettings['headers']['Host'] . '"';
-                    }
-                }
-                $uri .= "vmess://" . base64_encode($str) . "\r\n";
-            }
-        }
-        return base64_encode($uri);
     }
 
     private function shadowrocket($user, $servers = [])
