@@ -59,7 +59,7 @@ class BitpayXCrypto {
         if (!isset($result->order->order_id)) {
             abort(500, '订单创建失败');
         } else {
-            if (!isset($result['invoice']) || $result->invoice->pay_currency !== 'USDT') {
+            if (!isset($result->invoice) || $result->invoice->pay_currency !== 'USDT') {
                 $query = [
                     'order_id' => $result->order->order_id,
                     'pay_currency' => 'USDT'
@@ -81,12 +81,12 @@ class BitpayXCrypto {
                 $curl->close();
             }
         }
-        if (!isset($result['payment_url'])) {
+        if (!isset($result->payment_url)) {
             abort(500, '未知错误');
         }
         return [
             'type' => 1, // 0:qrcode 1:url
-            'data' => $result['payment_url']
+            'data' => $result->payment_url
         ];
     }
 
