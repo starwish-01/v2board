@@ -66,9 +66,8 @@ class StripeAlipay {
         ];
     }
 
-    public function notify(Request $request)
+    public function notify($params)
     {
-        $params = $request->input();
         \Stripe\Stripe::setApiKey($this->config['stripe_sk_live']);
         try {
             $event = \Stripe\Webhook::constructEvent(

@@ -60,9 +60,8 @@ class AlipayF2F {
         ];
     }
 
-    public function notify(Request $request)
+    public function notify($params)
     {
-        $params = $request->input();
         $gateway = Omnipay::create('Alipay_AopF2F');
         $gateway->setSignType('RSA2'); //RSA/RSA2
         $gateway->setAppId($this->config['app_id']);

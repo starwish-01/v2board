@@ -72,9 +72,8 @@ class MGate {
         ];
     }
 
-    public function notify(Request $request)
+    public function notify($params)
     {
-        $params = $request->input();
         $sign = $params['sign'];
         unset($params['sign']);
         ksort($params);

@@ -94,11 +94,8 @@ class BitpayXAlipay {
         ];
     }
 
-    public function notify(Request $request)
+    public function notify($params)
     {
-        $inputString = file_get_contents('php://input', 'r');
-        $inputStripped = str_replace(array("\r", "\n", "\t", "\v"), '', $inputString);
-        $inputJSON = json_decode($inputStripped, true);
         $params = [
             'status' => $inputJSON['status'],
             'order_id' => $inputJSON['order_id'],
