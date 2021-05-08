@@ -15,12 +15,12 @@ class PaymentController extends Controller
     {
         try {
             $paymentService = new PaymentService($method, null, $uuid);
-            $verify = $paymentService->notify($request->input());
+            $verify = $paymentService->notify($request);
             if (!$verify) abort(500, 'verify error');
             if (!$this->handle($verify['trade_no'], $verify['callback_no'])) {
                 abort(500, 'handle error');
             }
-            die('success');
+            die($verify['response']);
         } catch (\Exception $e) {
             abort(500, 'fail');
         }

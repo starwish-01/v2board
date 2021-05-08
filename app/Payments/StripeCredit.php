@@ -73,8 +73,9 @@ class StripeCredit {
         ];
     }
 
-    public function notify($params)
+    public function notify(Request $request)
     {
+        $params = $request->input();
         \Stripe\Stripe::setApiKey($this->config['stripe_sk_live']);
         try {
             $event = \Stripe\Webhook::constructEvent(
@@ -101,6 +102,7 @@ class StripeCredit {
                     $metaData = isset($object->metadata->out_trade_no) ? $object->metadata : $object->source->metadata;
                     $tradeNo = $metaData->out_trade_no;
                     return [
+                        'response' => 'success',
                         'trade_no' => $tradeNo,
                         'callback_no' => $object->balance_transaction
                     ];

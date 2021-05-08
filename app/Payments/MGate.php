@@ -72,8 +72,9 @@ class MGate {
         ];
     }
 
-    public function notify($params)
+    public function notify(Request $request)
     {
+        $params = $request->input();
         $sign = $params['sign'];
         unset($params['sign']);
         ksort($params);
@@ -83,6 +84,7 @@ class MGate {
             return false;
         }
         return [
+            'response' => 'success',
             'trade_no' => $params['out_trade_no'],
             'callback_no' => $params['trade_no']
         ];

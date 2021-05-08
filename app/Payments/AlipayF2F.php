@@ -60,8 +60,9 @@ class AlipayF2F {
         ];
     }
 
-    public function notify($params)
+    public function notify(Request $request)
     {
+        $params = $request->input();
         $gateway = Omnipay::create('Alipay_AopF2F');
         $gateway->setSignType('RSA2'); //RSA/RSA2
         $gateway->setAppId($this->config['app_id']);
@@ -77,6 +78,7 @@ class AlipayF2F {
                  * Payment is successful
                  */
                 return [
+                    'response' => 'success',
                     'trade_no' => $params['out_trade_no'],
                     'callback_no' => $params['trade_no']
                 ];
