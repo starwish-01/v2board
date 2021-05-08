@@ -82,24 +82,14 @@ class BitpayXCrypto {
 
     public function notify($params)
     {
-        $params = [
-            'status' => $inputJSON['status'],
-            'order_id' => $inputJSON['order_id'],
-            'merchant_order_id' => $inputJSON['merchant_order_id'],
-            'price_amount' => $inputJSON['price_amount'],
-            'price_currency' => $inputJSON['price_currency'],
-            'pay_amount' => $inputJSON['pay_amount'],
-            'pay_currency' => $inputJSON['pay_currency'],
-            'created_at_t' => $inputJSON['created_at_t']
-        ];
         $data_sign = array();
-        $data_sign['merchant_order_id'] = $tradeno;
-        $data_sign['secret'] = $this->bitpayxAppSecret;
+        $data_sign['merchant_order_id'] = $params['merchant_order_id'];
+        $data_sign['secret'] = $this->config['bitpayx_app_secret'];
         $data_sign['type'] = 'FIAT';
         ksort($data_sign);
         $strToSign = http_build_query($data_sign);
         $mySign = strtolower(md5(md5($strToSign) . $this->config['bitpayx_app_secret']));
-        if ($mySign !== $inputJSON['token']) {
+        if ($mySign !== $params['token']) {
             return false;
         }
         if ($params['status'] !== 'PAID') {
