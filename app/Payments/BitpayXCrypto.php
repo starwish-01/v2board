@@ -45,36 +45,36 @@ class BitpayXCrypto {
         $curl->setHeader('content-type', 'application/json');
         $curl->setHeader('token', $this->config['bitpayx_app_secret']);
         $curl->post('https://api.mugglepay.com/v1/orders', json_encode($params));
-        $result = json_decode($curl->response);
+        $result = $curl->response;
         if (!$result) {
             abort(500, '网络异常');
         }
         if ($curl->error) {
-            if (isset($result['error_code'])) {
-                abort(500, $result['error']);
+            if (isset($result->error_code)) {
+                abort(500, $result->error);
             }
             abort(500, '未知错误');
         }
         $curl->close();
-        if (!isset($result['order']['order_id'])) {
+        if (!isset($result->order->order_id)) {
             abort(500, '订单创建失败');
         } else {
-            if (!isset($result['invoice']) || $result['invoice']['pay_currency'] !== 'USDT') {
+            if (!isset($result['invoice']) || $result->invoice->pay_currency !== 'USDT') {
                 $query = [
-                    'order_id' => $result['order']['order_id'],
+                    'order_id' => $result->order->order_id,
                     'pay_currency' => 'USDT'
                 ];
                 $curl = new Curl();
                 $curl->setHeader('content-type', 'application/json');
                 $curl->setHeader('token', $this->config['bitpayx_app_secret']);
-                $curl->post('https://api.mugglepay.com/v1/orders/' . $result['order']['order_id'] . '/checkout', json_encode($query));
-                $result = json_decode($curl->response);
+                $curl->post('https://api.mugglepay.com/v1/orders/' . $result->order->order_id . '/checkout', json_encode($query));
+                $result = $curl->response;
                 if (!$result) {
                     abort(500, '网络异常');
                 }
                 if ($curl->error) {
-                    if (isset($result['error_code'])) {
-                        abort(500, $result['error']);
+                    if (isset($result->error_code)) {
+                        abort(500, $result->error);
                     }
                     abort(500, '未知错误');
                 }
