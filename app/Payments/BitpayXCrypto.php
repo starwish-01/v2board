@@ -81,7 +81,7 @@ class BitpayXCrypto {
                 $curl->close();
             }
         }
-        if (!isset($result['payment_url']) {
+        if (!isset($result['payment_url'])) {
             abort(500, '未知错误');
         }
         return [
