@@ -110,6 +110,7 @@ class StripeCredit {
             default:
                 abort(500, 'event is not support');
         }
+        die('success');
     }
 
     private function exchange($from, $to)
