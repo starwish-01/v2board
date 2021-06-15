@@ -289,6 +289,7 @@ rules:
   - DOMAIN-SUFFIX,edgecastcdn.net,SELECT
   - DOMAIN-SUFFIX,edgekey.net,SELECT
   - DOMAIN-SUFFIX,edgesuite.net,SELECT
+  - DOMAIN-SUFFIX,emby.si,SELECT
   - DOMAIN-SUFFIX,engadget.com,SELECT
   - DOMAIN-SUFFIX,entrust.net,SELECT
   - DOMAIN-SUFFIX,eurekavpt.com,SELECT
