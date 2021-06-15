@@ -324,6 +324,7 @@ rules:
   - DOMAIN-SUFFIX,edgecastcdn.net,$app_name
   - DOMAIN-SUFFIX,edgekey.net,$app_name
   - DOMAIN-SUFFIX,edgesuite.net,$app_name
+  - DOMAIN-SUFFIX,emby.si,$app_name
   - DOMAIN-SUFFIX,engadget.com,$app_name
   - DOMAIN-SUFFIX,entrust.net,$app_name
   - DOMAIN-SUFFIX,eurekavpt.com,$app_name
