@@ -19,6 +19,7 @@ class User
             $authData = explode(':', base64_decode($request->input('auth_data')));
             $user = \App\Models\User::where('password', $authData[1])
                 ->where('email', $authData[0])
+                ->where('banned', 0)
                 ->first();
             if ($user) {
                 $request->session()->put('email', $user->email);
