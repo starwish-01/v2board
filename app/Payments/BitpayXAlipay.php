@@ -23,6 +23,9 @@ class BitpayXAlipay {
 
     public function pay($order)
     {
+        if ($order['total_amount'] < 1000) {
+            abort(500, '该支付通道仅支持金额大于等于10元的订单。');
+        }
         $params = [
             'merchant_order_id' => $order['trade_no'],
             'price_amount' => $order['total_amount'] / 100,

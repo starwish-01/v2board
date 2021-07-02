@@ -19,9 +19,6 @@ use App\Utils\Helper;
 use Omnipay\Omnipay;
 use Stripe\Stripe;
 use Stripe\Source;
-use Library\BitpayX;
-use Library\MGate;
-use Library\Epay;
 
 class OrderController extends Controller
 {

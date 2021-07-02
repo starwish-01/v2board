@@ -31,6 +31,9 @@ class EPay {
 
     public function pay($order)
     {
+        if ($order['total_amount'] >= 1000) {
+            abort(500, '该支付通道仅支持金额小于10元的订单。');
+        }
         $params = [
             'money' => $order['total_amount'] / 100,
             'name' => $order['trade_no'],
