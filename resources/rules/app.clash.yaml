@@ -11,7 +11,6 @@ external-controller: 127.0.0.1:9090
 
 dns:
   enable: true
-  # listen: 0.0.0.0:53
   ipv6: false
 
   default-nameserver:
@@ -23,7 +22,8 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
   fallback:
-    - tls://1.0.0.1:853
+    - tls://one.one.one.one:853
+    - tls://dns.google:853
     - https://cloudflare-dns.com/dns-query
     - https://dns.google/dns-query
   fallback-filter:
