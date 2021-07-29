@@ -100,7 +100,6 @@ class BitpayXCrypto {
             return false;
         }
         return [
-            'response' => json_encode(['status' => 200]),
             'trade_no' => $params['merchant_order_id'],
             'callback_no' => $params['order_id']
         ];
