@@ -8,6 +8,7 @@ class BitpayXAlipay {
     public function __construct($config)
     {
         $this->config = $config;
+        $this->customResult = json_encode(['status' => 200]);
     }
 
     public function form()
@@ -110,7 +111,6 @@ class BitpayXAlipay {
             return false;
         }
         return [
-            'response' => json_encode(['status' => 200]),
             'trade_no' => $params['merchant_order_id'],
             'callback_no' => $params['order_id']
         ];
