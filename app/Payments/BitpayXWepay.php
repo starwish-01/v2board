@@ -8,6 +8,7 @@ class BitpayXWepay {
     public function __construct($config)
     {
         $this->config = $config;
+        $this->customResult = json_encode(['status' => 200]);
     }
 
     public function form()
