@@ -37,7 +37,8 @@ class EPay {
             'notify_url' => $order['notify_url'],
             'return_url' => $order['return_url'],
             'out_trade_no' => $order['trade_no'],
-            'pid' => $this->config['pid']
+            'pid' => $this->config['pid'],
+            'type' => 'alipay'
         ];
         ksort($params);
         reset($params);
