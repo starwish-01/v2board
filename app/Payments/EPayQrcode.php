@@ -2,7 +2,9 @@
 
 namespace App\Payments;
 
-class EPay {
+use \Curl\Curl;
+
+class EPayQrcode {
     public function __construct($config)
     {
         $this->config = $config;
@@ -44,7 +46,7 @@ class EPay {
         $str = stripslashes(urldecode(http_build_query($params))) . $this->config['key'];
         $params['sign'] = md5($str);
         $params['sign_type'] = 'MD5';
-        $curl = new Curl()
+        $curl = new Curl();
         $curl->post($this->config['url'] . '/qrcode.php?' . http_build_query($params));
         $result = $curl->response;
         if (!$result) {
