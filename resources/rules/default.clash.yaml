@@ -41,7 +41,7 @@ proxy-groups:
     - { name: '📢 谷歌FCM', type: select, proxies: ['🚀 节点选择', '🎯 全球直连', '♻️ 自动选择'] }
     - { name: '📲 电报信息', type: select, proxies: ['🚀 节点选择', '🎯 全球直连'] }
     - { name: 'Ⓜ️ 微软服务', type: select, proxies: ['🚀 节点选择', '🎯 全球直连'] }
-    - { name: '🎥 BiliBili' type: select, proxies: ['🚀 节点选择', '🎯 全球直连'] }
+    - { name: '🎥 BiliBili', type: select, proxies: ['🚀 节点选择', '🎯 全球直连'] }
     - { name: '🍎 苹果服务', type: select, proxies: ['🚀 节点选择', '🎯 全球直连'] }
     - { name: '🎯 全球直连', type: select, proxies: [DIRECT, '🚀 节点选择', '♻️ 自动选择'] }
     - { name: '🛑 全球拦截', type: select, proxies: [REJECT, DIRECT, '🎯 全球直连'] }
