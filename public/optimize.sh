@@ -73,12 +73,12 @@ fi
 OUT_ALERT "[信息] 优化参数中！"
 chattr -i /etc/sysctl.conf
 cat > /etc/sysctl.conf << EOF
-fs.file-max = 1024000
+fs.file-max = 10240000
 net.core.default_qdisc = fq
-net.core.netdev_max_backlog = 102400
+net.core.netdev_max_backlog = 10240000
 net.core.rmem_default = 65536
 net.core.rmem_max = 4194304
-net.core.somaxconn = 102400
+net.core.somaxconn = 10240000
 net.core.wmem_default = 65536
 net.core.wmem_max = 4194304
 net.ipv4.conf.all.rp_filter = 2
@@ -97,8 +97,8 @@ net.ipv4.tcp_fin_timeout = 3
 net.ipv4.tcp_keepalive_intvl = 10
 net.ipv4.tcp_keepalive_probes = 3
 net.ipv4.tcp_keepalive_time = 10
-net.ipv4.tcp_max_syn_backlog = 16384
-net.ipv4.tcp_max_tw_buckets = 16384
+net.ipv4.tcp_max_syn_backlog = 10240
+net.ipv4.tcp_max_tw_buckets = 10240
 net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_rfc1337 = 1
 net.ipv4.tcp_rmem = 4096 65536 4194304
@@ -110,19 +110,33 @@ net.ipv4.tcp_timestamps = 1
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_window_scaling = 1
 net.ipv4.tcp_wmem = 4096 65536 4194304
-net.ipv6.conf.all.forwarding = 1
-net.ipv6.conf.default.forwarding = 1
+net.netfilter.nf_conntrack_generic_timeout = 120
+net.netfilter.nf_conntrack_icmp_timeout = 3
+net.netfilter.nf_conntrack_max = 10240000
+net.netfilter.nf_conntrack_tcp_max_retrans = 3
+net.netfilter.nf_conntrack_tcp_timeout_close = 3
+net.netfilter.nf_conntrack_tcp_timeout_close_wait = 3
+net.netfilter.nf_conntrack_tcp_timeout_established = 120
+net.netfilter.nf_conntrack_tcp_timeout_fin_wait = 3
+net.netfilter.nf_conntrack_tcp_timeout_last_ack = 3
+net.netfilter.nf_conntrack_tcp_timeout_max_retrans = 3
+net.netfilter.nf_conntrack_tcp_timeout_syn_recv = 3
+net.netfilter.nf_conntrack_tcp_timeout_syn_sent = 3
+net.netfilter.nf_conntrack_tcp_timeout_time_wait = 3
+net.netfilter.nf_conntrack_tcp_timeout_unacknowledged = 3
+net.netfilter.nf_conntrack_udp_timeout = 3
+net.netfilter.nf_conntrack_udp_timeout_stream = 30
 vm.swappiness = 0
 EOF
 cat > /etc/security/limits.conf << EOF
-* soft nofile 102400
-* hard nofile 102400
-* soft nproc 102400
-* hard nproc 102400
-root soft nofile 102400
-root hard nofile 102400
-root soft nproc 102400
-root hard nproc 102400
+* soft nofile unlimited
+* hard nofile unlimited
+* soft nproc unlimited
+* hard nproc unlimited
+root soft nofile unlimited
+root hard nofile unlimited
+root soft nproc unlimited
+root hard nproc unlimited
 EOF
 cat > /etc/systemd/journald.conf <<EOF
 [Journal]
