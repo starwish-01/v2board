@@ -22,10 +22,10 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
   fallback:
-    - tls://one.one.one.one:853
-    - tls://dns.google:853
-    - https://cloudflare-dns.com/dns-query
-    - https://dns.google/dns-query
+    - tls://1.1.1.1:853
+    - tls://8.8.8.8:853
+    - https://1.0.0.1/dns-query
+    - https://8.8.4.4/dns-query
   fallback-filter:
     geoip: true
     ipcidr:
