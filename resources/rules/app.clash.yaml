@@ -428,6 +428,8 @@ rules:
   - DOMAIN-SUFFIX,playstationnetwork.com,SELECT
   - DOMAIN-SUFFIX,pushwoosh.com,SELECT
   - DOMAIN-SUFFIX,rime.im,SELECT
+  - DOMAIN-SUFFIX,reddit.com,SELECT
+  - DOMAIN-SUFFIX,redd.it,SELECT
   - DOMAIN-SUFFIX,servebom.com,SELECT
   - DOMAIN-SUFFIX,sfx.ms,SELECT
   - DOMAIN-SUFFIX,shadowsocks.org,SELECT
