@@ -72,6 +72,7 @@ fi
 
 OUT_ALERT "[信息] 优化参数中！"
 modprobe ip_conntrack
+echo "ip_conntrack" > /etc/modules-load.d/ip_conntrack.conf
 chattr -i /etc/sysctl.conf
 cat > /etc/sysctl.conf << EOF
 fs.file-max = 10240000
