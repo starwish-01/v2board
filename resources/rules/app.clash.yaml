@@ -178,6 +178,7 @@ rules:
   - DOMAIN-SUFFIX,sohu.com,DIRECT
   - DOMAIN-SUFFIX,soku.com,DIRECT
   - DOMAIN-SUFFIX,speedtest.net,DIRECT
+  - DOMAIN-SUFFIX,sptao.net,DIRECT
   - DOMAIN-SUFFIX,sspai.com,DIRECT
   - DOMAIN-SUFFIX,suning.com,DIRECT
   - DOMAIN-SUFFIX,taobao.com,DIRECT
