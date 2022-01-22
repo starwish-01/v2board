@@ -21973,6 +21973,7 @@ rules:
     - 'DOMAIN-SUFFIX,4sqi.net,🚀 节点选择'
     - 'DOMAIN-SUFFIX,a248.e.akamai.net,🚀 节点选择'
     - 'DOMAIN-SUFFIX,adobedtm.com,🚀 节点选择'
+    - 'DOMAIN-SUFFIX,account-intl.aliyun.com,🚀 节点选择'
     - 'DOMAIN-SUFFIX,ampproject.org,🚀 节点选择'
     - 'DOMAIN-SUFFIX,android.com,🚀 节点选择'
     - 'DOMAIN-SUFFIX,aolcdn.com,🚀 节点选择'
