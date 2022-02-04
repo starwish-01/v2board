@@ -185,32 +185,39 @@ class OrderService
 
     private function getSurplusValueByPeriod(User $user, Order $order)
     {
+        // 由流量计算
+        $plan = Plan::find($user->plan_id);
+        $trafficUnitPrice = $plan->onetime_price / $plan->transfer_enable;
+        if ($user->discount && $trafficUnitPrice) {
+            $trafficUnitPrice = $trafficUnitPrice - ($trafficUnitPrice * $user->discount / 100);
+        }
+        $notUsedTraffic = $plan->transfer_enable - (($user->u + $user->d) / 1073741824);
+        $orderSurplusAmountByTraffic = $trafficUnitPrice * $notUsedTraffic;
+        // 由时间计算
         $orderModel = Order::where('user_id', $user->id)
             ->where('period', '!=', 'reset_price')
             ->where('status', 3);
         $orders = $orderModel->get();
         $orderSurplusMonth = 0;
-        $orderSurplusAmount = 0;
+        $orderSurplusAmountByTime = 0;
         $userSurplusMonth = ($user->expired_at - time()) / 2678400;
         foreach ($orders as $k => $item) {
             // 兼容历史余留问题
             if ($item->period === 'onetime_price') continue;
             if ($this->orderIsUsed($item)) continue;
             $orderSurplusMonth = $orderSurplusMonth + self::STR_TO_TIME[$item->period];
-            $orderSurplusAmount = $orderSurplusAmount + ($item['total_amount'] + $item['balance_amount'] + $item['surplus_amount'] - $item['refund_amount']);
+            $orderSurplusAmountByTime = $orderSurplusAmountByTime + ($item['total_amount'] + $item['balance_amount'] + $item['surplus_amount'] - $item['refund_amount']);
         }
         if (!$orderSurplusMonth || !$orderSurplusAmount) return;
-        $monthUnitPrice = $orderSurplusAmount / $orderSurplusMonth;
+        $monthUnitPrice = $orderSurplusAmountByTime / $orderSurplusMonth;
         // 如果用户过期月大于订单过期月
         if ($userSurplusMonth > $orderSurplusMonth) {
-            $orderSurplusAmount = $orderSurplusMonth * $monthUnitPrice;
+            $orderSurplusAmountByTime = $orderSurplusMonth * $monthUnitPrice;
         } else {
-            $orderSurplusAmount = $userSurplusMonth * $monthUnitPrice;
+            $orderSurplusAmountByTime = $userSurplusMonth * $monthUnitPrice;
         }
-        if (!$orderSurplusAmount) {
-            return;
-        }
-        $order->surplus_amount = $orderSurplusAmount > 0 ? $orderSurplusAmount : 0;
+        if ($orderSurplusAmountByTime <= 0 || $orderSurplusAmountByTraffic <= 0) return;
+        $order->surplus_amount = $orderSurplusAmountByTime < $orderSurplusAmountByTraffic ? $orderSurplusAmountByTime : $orderSurplusAmountByTraffic;
         $order->surplus_order_ids = array_column($orders->toArray(), 'id');
     }
 
