@@ -185,19 +185,12 @@ class OrderService
 
     private function getSurplusValueByPeriod(User $user, Order $order)
     {
-        // 由流量计算
-        $plan = Plan::find($user->plan_id);
-        $trafficUnitPrice = $plan->onetime_price / $plan->transfer_enable;
-        if ($user->discount && $trafficUnitPrice) {
-            $trafficUnitPrice = $trafficUnitPrice - ($trafficUnitPrice * $user->discount / 100);
-        }
-        $notUsedTraffic = $plan->transfer_enable - (($user->u + $user->d) / 1073741824);
-        $orderSurplusAmountByTraffic = $trafficUnitPrice * $notUsedTraffic;
         // 由时间计算
         $orderModel = Order::where('user_id', $user->id)
             ->where('period', '!=', 'reset_price')
             ->where('status', 3);
         $orders = $orderModel->get();
+        $lastOrderPrice = 0;
         $orderSurplusMonth = 0;
         $orderSurplusAmountByTime = 0;
         $userSurplusMonth = ($user->expired_at - time()) / 2678400;
@@ -206,7 +199,8 @@ class OrderService
             if ($item->period === 'onetime_price') continue;
             if ($this->orderIsUsed($item)) continue;
             $orderSurplusMonth = $orderSurplusMonth + self::STR_TO_TIME[$item->period];
-            $orderSurplusAmountByTime = $orderSurplusAmountByTime + ($item['total_amount'] + $item['balance_amount'] + $item['surplus_amount'] - $item['refund_amount']);
+            $lastOrderPrice = $item['total_amount'] + $item['balance_amount'] + $item['surplus_amount'] - $item['refund_amount'];
+            $orderSurplusAmountByTime = $orderSurplusAmountByTime + $lastOrderPrice;
         }
         if (!$orderSurplusMonth || !$orderSurplusAmount) return;
         $monthUnitPrice = $orderSurplusAmountByTime / $orderSurplusMonth;
@@ -216,6 +210,14 @@ class OrderService
         } else {
             $orderSurplusAmountByTime = $userSurplusMonth * $monthUnitPrice;
         }
+        // 由流量计算
+        $plan = Plan::find($user->plan_id);
+        $trafficUnitPrice = $lastOrderPrice / $plan->transfer_enable;
+        if ($user->discount && $trafficUnitPrice) {
+            $trafficUnitPrice = $trafficUnitPrice - ($trafficUnitPrice * $user->discount / 100);
+        }
+        $notUsedTraffic = $plan->transfer_enable - (($user->u + $user->d) / 1073741824);
+        $orderSurplusAmountByTraffic = $trafficUnitPrice * $notUsedTraffic;
         if ($orderSurplusAmountByTime <= 0 || $orderSurplusAmountByTraffic <= 0) return;
         $order->surplus_amount = $orderSurplusAmountByTime < $orderSurplusAmountByTraffic ? $orderSurplusAmountByTime : $orderSurplusAmountByTraffic;
         $order->surplus_order_ids = array_column($orders->toArray(), 'id');
