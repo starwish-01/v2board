@@ -202,7 +202,7 @@ class OrderService
             $lastOrderPrice = $item['total_amount'] + $item['balance_amount'] + $item['surplus_amount'] - $item['refund_amount'];
             $orderSurplusAmountByTime = $orderSurplusAmountByTime + $lastOrderPrice;
         }
-        if (!$orderSurplusMonth || !$orderSurplusAmount) return;
+        if (!$orderSurplusMonth || !$orderSurplusAmountByTime) return;
         $monthUnitPrice = $orderSurplusAmountByTime / $orderSurplusMonth;
         // 如果用户过期月大于订单过期月
         if ($userSurplusMonth > $orderSurplusMonth) {
