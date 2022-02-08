@@ -47,15 +47,16 @@ class ResetTraffic extends Command
         foreach (Plan::get() as $plan) {
             switch ($plan->reset_traffic_method) {
                 case null: {
+					$builder = with(clone($this->builder))->where('plan_id', $plan->id);
                     $resetTrafficMethod = config('v2board.reset_traffic_method', 0);
                     switch ((int)$resetTrafficMethod) {
                         // month first day
                         case 0:
-                            $this->resetByMonthFirstDay($this->builder);
+                            $this->resetByMonthFirstDay($builder);
                             break;
                         // expire day
                         case 1:
-                            $this->resetByExpireDay($this->builder);
+                            $this->resetByExpireDay($builder);
                             break;
                         // no action
                         case 2:
@@ -101,7 +102,7 @@ class ResetTraffic extends Command
                 array_push($users, $item->id);
             }
 
-            if (($today === $lastDay) && $expireDay >= $lastDay) {
+            if (($today === $lastDay) && $expireDay > $lastDay) {
                 array_push($users, $item->id);
             }
         }
