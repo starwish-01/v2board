@@ -40,8 +40,8 @@ class PaymentService
     public function pay($order)
     {
         return $this->payment->pay([
-            'notify_url' => url("/api/v1/guest/payment/notify/{$this->method}/{$this->config['uuid']}"),
-            'return_url' => config('v2board.app_url', env('APP_URL')) . '/#/order/' . $order['trade_no'],
+            'notify_url' => config('v2board.app_url', env('APP_URL')) . '/api/v1/guest/payment/notify/' . $this->method . '/' . $this->config['uuid'],
+            'return_url' => url("/#/order/{$order['trade_no']}"),
             'trade_no' => $order['trade_no'],
             'total_amount' => $order['total_amount'],
             'user_id' => $order['user_id'],
