@@ -45,17 +45,13 @@
 <script src="/theme/{{$theme}}/assets/components.async.js?v={{$verison}}"></script>
 <script src="/theme/{{$theme}}/assets/umi.js?v={{$verison}}"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-P1E9Z5LRRK"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-193730052-1"></script>
 <script>
-    window.dataLayer = window.dataLayer || [];
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-
-    gtag('config', 'G-P1E9Z5LRRK');
+  gtag('config', 'UA-193730052-1');
 </script>
 </body>
 
