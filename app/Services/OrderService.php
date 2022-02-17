@@ -216,7 +216,7 @@ class OrderService
         if ($user->discount && $trafficUnitPrice) {
             $trafficUnitPrice = $trafficUnitPrice - ($trafficUnitPrice * $user->discount / 100);
         }
-        $notUsedTraffic = $plan->transfer_enable - (($user->u + $user->d) / 1073741824);
+        $notUsedTraffic = ($plan->transfer_enable * $orderSurplusMonth) - (($user->u + $user->d) / 1073741824);
         $orderSurplusAmountByTraffic = $trafficUnitPrice * $notUsedTraffic;
         if ($orderSurplusAmountByTime <= 0 || $orderSurplusAmountByTraffic <= 0) return;
         $order->surplus_amount = $orderSurplusAmountByTime < $orderSurplusAmountByTraffic ? $orderSurplusAmountByTime : $orderSurplusAmountByTraffic;
