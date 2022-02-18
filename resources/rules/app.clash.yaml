@@ -22,8 +22,9 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
   fallback:
-    - https://cloudflare-dns.com/dns-query
+    - https://1.1.1.1/dns-query
     - https://dns.google/dns-query
+    - tls://1.0.0.1:853
   fallback-filter:
     geoip: true
     ipcidr:
