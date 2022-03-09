@@ -44,11 +44,19 @@ class ResetTraffic extends Command
     public function handle()
     {
         ini_set('memory_limit', -1);
-        foreach (Plan::get() as $plan) {
-            switch ($plan->reset_traffic_method) {
-                case null: {
-                    $builder = with(clone($this->builder))->where('plan_id', $plan->id);
+        $resetMethods = Plan::select(
+            DB::raw("GROUP_CONCAT(`id`) as plan_ids"),
+            DB::raw("reset_traffic_method as method")
+        )
+            ->groupBy('reset_traffic_method')
+            ->get()
+            ->toArray();
+        foreach ($resetMethods as $resetMethod) {
+            $planIds = explode(',', $resetMethod['plan_ids']);
+            switch (true) {
+                case ($resetMethod['method'] === NULL): {
                     $resetTrafficMethod = config('v2board.reset_traffic_method', 0);
+                    $builder = with(clone($this->builder))->whereIn('plan_id', $planIds);
                     switch ((int)$resetTrafficMethod) {
                         // month first day
                         case 0:
@@ -64,17 +72,17 @@ class ResetTraffic extends Command
                     }
                     break;
                 }
-                case 0: {
-                    $builder = with(clone($this->builder))->where('plan_id', $plan->id);
+                case ($resetMethod['method'] === 0): {
+                    $builder = with(clone($this->builder))->whereIn('plan_id', $planIds);
                     $this->resetByMonthFirstDay($builder);
                     break;
                 }
-                case 1: {
-                    $builder = with(clone($this->builder))->where('plan_id', $plan->id);
+                case ($resetMethod['method'] === 1): {
+                    $builder = with(clone($this->builder))->whereIn('plan_id', $planIds);
                     $this->resetByExpireDay($builder);
                     break;
                 }
-                case 2: {
+                case ($resetMethod['method'] === 2): {
                     break;
                 }
             }
