@@ -130,7 +130,6 @@ net.netfilter.nf_conntrack_udp_timeout = 2
 net.netfilter.nf_conntrack_udp_timeout_stream = 30
 vm.swappiness = 0
 EOF
-EOF
 cat > /etc/security/limits.conf << EOF
 * soft nofile 10240000
 * hard nofile 10240000
