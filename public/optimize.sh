@@ -76,6 +76,7 @@ echo "ip_conntrack" > /etc/modules-load.d/ip_conntrack.conf
 chattr -i /etc/sysctl.conf
 cat > /etc/sysctl.conf << EOF
 fs.file-max = 10240000
+fs.nr_open = 10240000
 net.core.default_qdisc = fq
 net.core.rmem_default = 65536
 net.core.rmem_max = 4194304
