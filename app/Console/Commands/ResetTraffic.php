@@ -32,8 +32,8 @@ class ResetTraffic extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->builder = User::where('expired_at', '!=', NULL)
-            ->where('expired_at', '>', time());
+        $this->builder = User::where('expired_at', '=', NULL)
+            ->orWhere('expired_at', '>', time());
     }
 
     /**
